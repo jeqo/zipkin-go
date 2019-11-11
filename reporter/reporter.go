@@ -26,14 +26,17 @@ import "github.com/openzipkin/zipkin-go/model"
 // Reporter interface can be used to provide the Zipkin Tracer with custom
 // implementations to publish Zipkin Span data.
 type Reporter interface {
+	//Deprecated: prefer to use Report instead
 	Send(model.SpanModel) // Send Span data to the reporter
-	Close() error         // Close the reporter
+	Report(model.SpanModel)
+	Close() error // Close the reporter
 }
 
 type noopReporter struct{}
 
-func (r *noopReporter) Send(model.SpanModel) {}
-func (r *noopReporter) Close() error         { return nil }
+func (r *noopReporter) Send(model.SpanModel)   {}
+func (r *noopReporter) Report(model.SpanModel) {}
+func (r *noopReporter) Close() error           { return nil }
 
 // NewNoopReporter returns a no-op Reporter implementation.
 func NewNoopReporter() Reporter {
